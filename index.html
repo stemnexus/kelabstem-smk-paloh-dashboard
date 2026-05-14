@@ -1,1 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NEXUS STEM HUB</title>
 
+  <link rel="stylesheet" href="style.css"/>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+  <!-- HERO -->
+  <section class="hero">
+
+    <div class="overlay"></div>
+
+    <div class="hero-content">
+
+      <img src="logo.png" class="logo"/>
+
+      <h1>NEXUS STEM HUB</h1>
+
+      <p class="subtitle">
+        Innovation • Analytics • Impact
+      </p>
+
+      <div class="status">
+        <span class="dot"></span>
+        SYSTEM ONLINE
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- KPI -->
+  <section class="metrics">
+
+    <div class="metric-card">
+      <h2 id="totalStudents">0</h2>
+      <p>Participants</p>
+    </div>
+
+    <div class="metric-card">
+      <h2 id="totalCompetitions">0</h2>
+      <p>Competitions</p>
+    </div>
+
+    <div class="metric-card">
+      <h2 id="totalAchievements">0</h2>
+      <p>Achievements</p>
+    </div>
+
+    <div class="metric-card">
+      <h2 id="totalPrograms">0</h2>
+      <p>Programs</p>
+    </div>
+
+  </section>
+
+  <!-- CHART -->
+  <section class="chart-section">
+
+    <div class="panel">
+
+      <h3>Nexus Metrics</h3>
+
+      <canvas id="participationChart"></canvas>
+
+    </div>
+
+  </section>
+
+  <!-- COMPETITION TRACKER -->
+  <section class="panel">
+
+    <h3>Competition Tracker</h3>
+
+    <input
+      type="text"
+      id="searchInput"
+      placeholder="Search competition / student..."
+    />
+
+    <table>
+
+      <thead id="tableHead"></thead>
+
+      <tbody id="tableBody"></tbody>
+
+    </table>
+
+  </section>
+
+  <!-- STEM PULSE -->
+  <section class="panel">
+
+    <h3>STEM Pulse</h3>
+
+    <div class="coming-soon">
+      Survey System Ready
+    </div>
+
+  </section>
+
+  <!-- VOICE HUB -->
+  <section class="panel">
+
+    <h3>Voice Hub</h3>
+
+    <div class="coming-soon">
+      Feedback System Ready
+    </div>
+
+  </section>
+
+  <!-- NEXUS AI -->
+  <section class="panel">
+
+    <h3>Nexus AI</h3>
+
+    <div class="coming-soon">
+      AI Chatbot Module Ready
+    </div>
+
+  </section>
+
+  <!-- MEDIA NEXUS -->
+  <section class="panel">
+
+    <h3>Media Nexus</h3>
+
+    <div class="gallery" id="gallery">
+
+    </div>
+
+  </section>
+
+  <!-- FUTURE -->
+  <section class="panel">
+
+    <h3>Future Modules</h3>
+
+    <div class="future-grid">
+
+      <div class="future-card">Nexus Passport</div>
+
+      <div class="future-card">QR Attendance</div>
+
+      <div class="future-card">AI Analytics</div>
+
+      <div class="future-card">Auto OPR Generator</div>
+
+    </div>
+
+  </section>
+
+  <footer>
+    NEXUS STEM HUB © 2026
+  </footer>
+
+  <script src="script.js"></script>
+
+</body>
+</html>
