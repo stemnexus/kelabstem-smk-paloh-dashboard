@@ -3,6 +3,16 @@ const API_URL = "https://script.google.com/macros/s/AKfycbyrcy8iK-0nSS_q9aA2lsTC
 let allData = {};
 let charts = {};
 
+const palette = [
+  "#38bdf8",
+  "#8b5cf6",
+  "#22c55e",
+  "#f97316",
+  "#ec4899",
+  "#facc15",
+  "#14b8a6"
+];
+
 async function loadData() {
   const response = await fetch(API_URL);
   allData = await response.json();
@@ -30,16 +40,11 @@ function destroyChart(id) {
 }
 
 function updateYearLabels(year) {
-  [
-    "studentYearLabel",
-    "levelYearLabel",
-    "categoryYearLabel",
-    "subcategoryYearLabel",
-    "achievementYearLabel"
-  ].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.textContent = year;
-  });
+  ["studentYearLabel","levelYearLabel","categoryYearLabel","subcategoryYearLabel","achievementYearLabel"]
+    .forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = year;
+    });
 }
 
 function renderDashboard(year) {
@@ -52,48 +57,41 @@ function renderDashboard(year) {
   renderAchievement(year);
 }
 
-/* KPI */
-
 function renderKPI(year) {
-  const totalStudents = sumData(allData.API_TOP5_STUDENT, year);
-  const totalCategory = sumData(allData.API_CATEGORY, year);
-  const totalAchievement = sumData(allData.API_PENCAPAIAN, year);
-  const totalLevel = sumData(allData.API_PERINGKAT, year);
-
-  document.getElementById("totalStudents").textContent = totalStudents;
-  document.getElementById("totalCategory").textContent = totalCategory;
-  document.getElementById("totalAchievement").textContent = totalAchievement;
-  document.getElementById("totalLevel").textContent = totalLevel;
+  document.getElementById("totalStudents").textContent = sumData(allData.API_TOP5_STUDENT, year);
+  document.getElementById("totalCategory").textContent = sumData(allData.API_CATEGORY, year);
+  document.getElementById("totalAchievement").textContent = sumData(allData.API_PENCAPAIAN, year);
+  document.getElementById("totalLevel").textContent = sumData(allData.API_PERINGKAT, year);
 }
 
-/* VALUE LABEL INSIDE BAR */
+/* DATA LABEL TENGAH BAR */
 
-const valueLabelPlugin = {
-  id: "valueLabelPlugin",
+const centerValueLabelPlugin = {
+  id: "centerValueLabelPlugin",
   afterDatasetsDraw(chart) {
     const { ctx } = chart;
-    ctx.save();
-
     const dataset = chart.data.datasets[0];
     const meta = chart.getDatasetMeta(0);
 
-    ctx.font = "bold 13px Inter, sans-serif";
+    ctx.save();
+    ctx.font = "bold 14px Inter, sans-serif";
     ctx.fillStyle = "#ffffff";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
 
     meta.data.forEach((bar, index) => {
       const value = dataset.data[index];
-      const position = bar.tooltipPosition();
-
-      ctx.fillText(value, position.x, position.y);
+      const pos = bar.tooltipPosition();
+      ctx.fillText(value, pos.x, pos.y);
     });
 
     ctx.restore();
   }
 };
 
-/* SHARED HORIZONTAL BAR OPTIONS */
+function colorSet(count) {
+  return Array.from({ length: count }, (_, i) => palette[i % palette.length]);
+}
 
 function horizontalBarOptions() {
   return {
@@ -101,49 +99,21 @@ function horizontalBarOptions() {
     maintainAspectRatio: false,
     indexAxis: "y",
     plugins: {
-      legend: {
-        display: false
-      }
+      legend: { display: false },
+      tooltip: { enabled: true }
     },
     scales: {
       x: {
         display: false,
-        grid: {
-          display: false
-        }
+        grid: { display: false }
       },
       y: {
-        grid: {
-          display: false
-        },
+        grid: { display: false },
         ticks: {
           color: "#e5e7eb",
           font: {
             size: 12,
-            weight: "600"
-          }
-        }
-      }
-    }
-  };
-}
-
-/* SHARED DOUGHNUT OPTIONS */
-
-function doughnutOptions() {
-  return {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        position: "left",
-        labels: {
-          color: "#cbd5e1",
-          boxWidth: 14,
-          padding: 14,
-          font: {
-            size: 12,
-            weight: "600"
+            weight: "700"
           }
         }
       }
@@ -157,27 +127,23 @@ function renderTopStudent(year) {
   destroyChart("topStudentChart");
 
   const data = filterYear(allData.API_TOP5_STUDENT, year);
-
   const labels = data.map(item => item.LABEL);
   const values = data.map(item => Number(item.JUMLAH || 0));
 
-  const ctx = document.getElementById("topStudentChart");
-
-  charts.topStudentChart = new Chart(ctx, {
+  charts.topStudentChart = new Chart(document.getElementById("topStudentChart"), {
     type: "bar",
     data: {
       labels,
       datasets: [{
-        label: "Jumlah Penyertaan",
         data: values,
-        backgroundColor: "rgba(56,189,248,0.78)",
-        borderColor: "#38bdf8",
+        backgroundColor: colorSet(values.length),
+        borderColor: colorSet(values.length),
         borderWidth: 1,
         borderRadius: 10
       }]
     },
     options: horizontalBarOptions(),
-    plugins: [valueLabelPlugin]
+    plugins: [centerValueLabelPlugin]
   });
 }
 
@@ -187,90 +153,75 @@ function renderLevel(year) {
   destroyChart("levelChart");
 
   const data = filterYear(allData.API_PERINGKAT, year);
-
   const labels = data.map(item => item.LABEL);
   const values = data.map(item => Number(item.JUMLAH || 0));
 
-  const ctx = document.getElementById("levelChart");
-
-  charts.levelChart = new Chart(ctx, {
+  charts.levelChart = new Chart(document.getElementById("levelChart"), {
     type: "bar",
     data: {
       labels,
       datasets: [{
-        label: "Jumlah Pertandingan",
         data: values,
-        backgroundColor: "rgba(34,211,238,0.78)",
-        borderColor: "#22d3ee",
+        backgroundColor: colorSet(values.length),
+        borderColor: colorSet(values.length),
         borderWidth: 1,
         borderRadius: 10
       }]
     },
     options: horizontalBarOptions(),
-    plugins: [valueLabelPlugin]
+    plugins: [centerValueLabelPlugin]
   });
 }
 
-/* TOP CATEGORY */
+/* CATEGORY */
 
 function renderCategory(year) {
   destroyChart("categoryChart");
 
   const data = filterYear(allData.API_CATEGORY, year);
-
   const labels = data.map(item => item.LABEL);
   const values = data.map(item => Number(item.JUMLAH || 0));
 
-  const ctx = document.getElementById("categoryChart");
-
-  charts.categoryChart = new Chart(ctx, {
-    type: "doughnut",
-    data: {
-      labels,
-      datasets: [{
-        data: values,
-        backgroundColor: [
-          "#38bdf8",
-          "#fb7185",
-          "#fb923c",
-          "#a78bfa",
-          "#22c55e"
-        ],
-        borderColor: "#0f172a",
-        borderWidth: 2
-      }]
-    },
-    options: doughnutOptions()
-  });
-}
-
-/* TOP SUBCATEGORY */
-
-function renderSubcategory(year) {
-  destroyChart("subcategoryChart");
-
-  const data = filterYear(allData.API_SUBCATEGORY, year);
-
-  const labels = data.map(item => item.LABEL);
-  const values = data.map(item => Number(item.JUMLAH || 0));
-
-  const ctx = document.getElementById("subcategoryChart");
-
-  charts.subcategoryChart = new Chart(ctx, {
+  charts.categoryChart = new Chart(document.getElementById("categoryChart"), {
     type: "bar",
     data: {
       labels,
       datasets: [{
-        label: "Jumlah",
         data: values,
-        backgroundColor: "rgba(167,139,250,0.78)",
-        borderColor: "#a78bfa",
+        backgroundColor: colorSet(values.length),
+        borderColor: colorSet(values.length),
         borderWidth: 1,
         borderRadius: 10
       }]
     },
     options: horizontalBarOptions(),
-    plugins: [valueLabelPlugin]
+    plugins: [centerValueLabelPlugin]
+  });
+}
+
+/* SUBCATEGORY */
+
+function renderSubcategory(year) {
+  destroyChart("subcategoryChart");
+
+  const data = filterYear(allData.API_SUBCATEGORY, year);
+  const labels = data.map(item => item.LABEL);
+  const values = data.map(item => Number(item.JUMLAH || 0));
+
+  charts.subcategoryChart = new Chart(document.getElementById("subcategoryChart"), {
+    type: "bar",
+    data: {
+      labels,
+      datasets: [{
+        data: values,
+        backgroundColor: colorSet(values.length),
+        borderColor: colorSet(values.length),
+        borderWidth: 1,
+        borderRadius: 10
+      }]
+    },
+    options: horizontalBarOptions(),
+    plugins: [centerValueLabelPlugin]
   });
 }
 
@@ -280,31 +231,25 @@ function renderAchievement(year) {
   destroyChart("achievementChart");
 
   const data = filterYear(allData.API_PENCAPAIAN, year);
-
   const labels = data.map(item => item.LABEL);
   const values = data.map(item => Number(item.JUMLAH || 0));
 
-  const ctx = document.getElementById("achievementChart");
-
-  charts.achievementChart = new Chart(ctx, {
+  charts.achievementChart = new Chart(document.getElementById("achievementChart"), {
     type: "bar",
     data: {
       labels,
       datasets: [{
-        label: "Jumlah",
         data: values,
-        backgroundColor: "rgba(251,191,36,0.78)",
-        borderColor: "#fbbf24",
+        backgroundColor: colorSet(values.length),
+        borderColor: colorSet(values.length),
         borderWidth: 1,
         borderRadius: 10
       }]
     },
     options: horizontalBarOptions(),
-    plugins: [valueLabelPlugin]
+    plugins: [centerValueLabelPlugin]
   });
 }
-
-/* YEAR SELECTOR */
 
 const yearSelect = document.getElementById("yearSelect");
 
