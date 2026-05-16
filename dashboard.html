@@ -3,36 +3,47 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NEXUS STEM Dashboard</title>
+
+  <title>NEXUS STEM Dashboard | SMK Paloh</title>
+
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body>
 
   <section class="dashboard-page">
 
     <aside class="sidebar">
-      <img src="assets/logopaloh.png" alt="Logo SMK Paloh" class="side-logo">
-      <h2>NEXUS <span>STEM</span></h2>
-      <p>SMK PALOH</p>
+      <div class="sidebar-brand">
+        <img src="assets/logopaloh.png" alt="Logo SMK Paloh" class="side-logo" />
+        <div>
+          <h2>NEXUS <span>STEM</span></h2>
+          <p>SMK PALOH</p>
+        </div>
+      </div>
 
-      <a href="index.html">Home</a>
-      <a class="active" href="dashboard.html">Dashboard</a>
-      <a href="#">Category</a>
-      <a href="#">Subcategory</a>
-      <a href="#">Achievement</a>
-      <a href="#">Feedback</a>
+      <nav class="side-nav">
+        <a href="index.html">Home</a>
+        <a class="active" href="dashboard.html">Dashboard</a>
+        <a href="#">Category</a>
+        <a href="#">Subcategory</a>
+        <a href="#">Achievement</a>
+        <a href="#">Feedback</a>
+      </nav>
     </aside>
 
     <main class="dashboard-main">
+
       <header class="dash-header">
         <div>
-          <h1>STEM ANALYTICS DASHBOARD</h1>
-          <p>Analisis data STEM SMK Paloh 2024–2026</p>
+          <span class="page-label">Live Analytics</span>
+          <h1>STEM Analytics Dashboard</h1>
+          <p>Analisis data STEM SMK Paloh bagi tahun 2024 hingga 2026.</p>
         </div>
 
-        <select id="yearSelect">
-          <option value="2026">2026 Terkini</option>
+        <select id="yearSelect" aria-label="Pilih tahun">
+          <option value="2026" selected>2026 Terkini</option>
           <option value="2025">2025</option>
           <option value="2024">2024</option>
         </select>
@@ -42,56 +53,89 @@
         <div class="kpi-card">
           <p>Jumlah Pelajar</p>
           <h2 id="totalStudents">0</h2>
+          <small>Top 5 tahun dipilih</small>
         </div>
 
         <div class="kpi-card">
           <p>Jumlah Category</p>
           <h2 id="totalCategory">0</h2>
+          <small>Jumlah kategori direkodkan</small>
         </div>
 
         <div class="kpi-card">
           <p>Jumlah Pencapaian</p>
           <h2 id="totalAchievement">0</h2>
+          <small>Berdasarkan pencapaian</small>
         </div>
 
         <div class="kpi-card">
           <p>Jumlah Peringkat</p>
           <h2 id="totalLevel">0</h2>
+          <small>Daerah hingga antarabangsa</small>
         </div>
       </section>
 
       <section class="chart-grid">
-        <div class="chart-card large">
-          <h3>Top 5 Student</h3>
-          <canvas id="topStudentChart"></canvas>
+
+        <div class="chart-card chart-wide">
+          <div class="chart-header">
+            <h3>Top 5 Student</h3>
+            <span id="studentYearLabel">2026</span>
+          </div>
+          <div class="chart-box">
+            <canvas id="topStudentChart"></canvas>
+          </div>
         </div>
 
         <div class="chart-card">
-          <h3>Level Pertandingan</h3>
-          <canvas id="levelChart"></canvas>
+          <div class="chart-header">
+            <h3>Level Pertandingan</h3>
+            <span id="levelYearLabel">2026</span>
+          </div>
+          <div class="chart-box">
+            <canvas id="levelChart"></canvas>
+          </div>
         </div>
 
         <div class="chart-card">
-          <h3>Top Category</h3>
-          <canvas id="categoryChart"></canvas>
+          <div class="chart-header">
+            <h3>Top Category</h3>
+            <span id="categoryYearLabel">2026</span>
+          </div>
+          <div class="chart-box">
+            <canvas id="categoryChart"></canvas>
+          </div>
         </div>
 
         <div class="chart-card">
-          <h3>Top Subcategory</h3>
-          <canvas id="subcategoryChart"></canvas>
+          <div class="chart-header">
+            <h3>Top Subcategory</h3>
+            <span id="subcategoryYearLabel">2026</span>
+          </div>
+          <div class="chart-box">
+            <canvas id="subcategoryChart"></canvas>
+          </div>
         </div>
 
-        <div class="chart-card wide">
-          <h3>Pencapaian</h3>
-          <canvas id="achievementChart"></canvas>
+        <div class="chart-card chart-wide">
+          <div class="chart-header">
+            <h3>Pencapaian</h3>
+            <span id="achievementYearLabel">2026</span>
+          </div>
+          <div class="chart-box">
+            <canvas id="achievementChart"></canvas>
+          </div>
         </div>
+
       </section>
+
     </main>
 
-    <div class="nexus-ai">
-      🤖 <strong>NEXUS AI</strong>
+    <button class="nexus-ai" type="button">
+      <span>🤖</span>
+      <strong>NEXUS AI</strong>
       <small>Tanya data STEM</small>
-    </div>
+    </button>
 
   </section>
 
