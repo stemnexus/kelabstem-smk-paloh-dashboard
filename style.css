@@ -304,47 +304,168 @@ body{
   opacity:.8;
 }
 
-canvas{
-  width:100% !important;
+.chart-card {
+  min-height: 320px;
+  max-height: 420px;
+  overflow: hidden;
 }
 
-@media(max-width:1100px){
+.chart-card canvas {
+  width: 100% !important;
+  height: 260px !important;
+  max-height: 260px !important;
+}
+
+@media(max-width:900px){
+
+  .landing-page{
+    padding:22px;
+  }
+
+  .top-nav{
+    margin-bottom:30px;
+  }
+
+  .brand-small img{
+    width:42px;
+  }
+
+  .nav-links{
+    gap:14px;
+    font-size:14px;
+  }
 
   .hero{
     flex-direction:column;
-    gap:60px;
+    align-items:flex-start;
+    min-height:auto;
+    gap:30px;
   }
 
-  .hero-text,
-  .hero-visual{
+  .hero-text{
     width:100%;
-    text-align:center;
+  }
+
+  .main-logo{
+    width:90px;
+  }
+
+  .hero h1{
+    font-size:48px;
+  }
+
+  .tagline{
+    font-size:17px;
   }
 
   .desc{
     width:100%;
+    font-size:14px;
+  }
+
+  .hero-visual{
+    width:100%;
+  }
+
+  .glow-cube{
+    width:180px;
+    height:180px;
+    border-radius:28px;
+    font-size:34px;
   }
 
   .dashboard-page{
-    flex-direction:column;
+    display:block;
   }
 
   .sidebar{
     width:100%;
+    height:auto;
+    padding:14px;
     flex-direction:row;
-    overflow:auto;
+    align-items:center;
+    overflow-x:auto;
+    gap:8px;
+    position:sticky;
+    top:0;
+    z-index:10;
+  }
+
+  .side-logo,
+  .sidebar h2,
+  .sidebar p{
+    display:none;
+  }
+
+  .sidebar a{
+    white-space:nowrap;
+    padding:10px 14px;
+    font-size:13px;
+  }
+
+  .dashboard-main{
+    padding:20px;
+  }
+
+  .dash-header{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:14px;
+    margin-bottom:20px;
+  }
+
+  .dash-header h1{
+    font-size:24px;
+  }
+
+  .dash-header p{
+    font-size:14px;
+  }
+
+  #yearSelect{
+    width:100%;
   }
 
   .kpi-grid{
-    grid-template-columns:1fr 1fr;
+    grid-template-columns:repeat(2,1fr);
+    gap:12px;
+  }
+
+  .kpi-card{
+    padding:16px;
+    border-radius:18px;
+  }
+
+  .kpi-card h2{
+    font-size:28px;
   }
 
   .chart-grid{
     grid-template-columns:1fr;
+    gap:16px;
   }
 
   .large,
   .wide{
     grid-column:span 1;
+  }
+
+  .chart-card{
+    padding:18px;
+    min-height:300px;
+    max-height:360px;
+  }
+
+  .chart-card canvas{
+    height:230px !important;
+    max-height:230px !important;
+  }
+
+  .nexus-ai{
+    right:16px;
+    bottom:16px;
+    padding:12px 16px;
+    border-radius:18px;
+    font-size:13px;
   }
 }
