@@ -1,138 +1,177 @@
-const API_URL = "https://script.google.com/macros/s/AKfycbzA_pSP6Ak-V6dtGWorfgCpA_2OYparnQT8mKL8ac79t5O5ZF3L1kDFDPpIXB-iwcjHSg/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbyrcy8iK-0nSS_q9aA2lsTCmee-_YF-Yv3FK656vADnf30ceKZb-ud_UlEwyjBTU0J1/exec";
 
-let allData = [];
+let allData = {};
 
-async function loadData(){
+async function loadData() {
 
-  try{
+  const response = await fetch(API_URL);
 
-    const response = await fetch(API_URL);
+  allData = await response.json();
 
-    const data = await response.json();
-
-    allData = data;
-
-    renderMetrics(data);
-
-    renderTable(data);
-
-    renderChart(data);
-
-  }
-
-  catch(error){
-
-    console.error(error);
-
-  }
+  renderDashboard(2026);
 
 }
 
-function renderMetrics(data){
+function renderDashboard(year){
 
-  document.getElementById("totalStudents")
-  .innerText = data.length;
-
-  document.getElementById("totalCompetitions")
-  .innerText =
-  new Set(data.map(d => d.Program)).size;
-
-  document.getElementById("totalAchievements")
-  .innerText =
-  data.filter(d => d.Achievement).length;
-
-  document.getElementById("totalPrograms")
-  .innerText =
-  new Set(data.map(d => d.Category)).size;
+  renderTopStudent(year);
+  renderCategory(year);
+  renderSubcategory(year);
+  renderAchievement(year);
+  renderLevel(year);
 
 }
 
-function renderTable(data){
+function filterYear(data, year){
 
-  const tableHead =
-  document.getElementById("tableHead");
-
-  const tableBody =
-  document.getElementById("tableBody");
-
-  if(data.length === 0) return;
-
-  const headers =
-  Object.keys(data[0]);
-
-  tableHead.innerHTML =
-  `<tr>
-    ${headers.map(h=>`<th>${h}</th>`).join("")}
-  </tr>`;
-
-  tableBody.innerHTML =
-  data.map(row => `
-    <tr>
-      ${headers.map(h=>`<td>${row[h]}</td>`).join("")}
-    </tr>
-  `).join("");
+  return data.filter(item => item.TAHUN == year);
 
 }
 
-function renderChart(data){
+/* TOP STUDENT */
 
-  const ctx =
-  document.getElementById("participationChart");
+function renderTopStudent(year){
+
+  const data = filterYear(allData.API_TOP5_STUDENT, year);
+
+  const labels = data.map(item => item.LABEL);
+
+  const values = data.map(item => item.JUMLAH);
+
+  const ctx = document.getElementById('topStudentChart');
 
   new Chart(ctx,{
-
-    type:"bar",
-
+    type:'bar',
     data:{
-
-      labels:[
-        "Participants",
-        "Competitions",
-        "Achievements"
-      ],
-
+      labels:labels,
       datasets:[{
-
-        label:"Nexus Metrics",
-
-        data:[
-          data.length,
-          new Set(data.map(d => d.Program)).size,
-          data.filter(d => d.Achievement).length
-        ],
-
-        backgroundColor:[
-          "#06b6d4",
-          "#8b5cf6",
-          "#22c55e"
-        ]
-
+        label:'Jumlah Penyertaan',
+        data:values
       }]
-
+    },
+    options:{
+      responsive:true
     }
-
   });
 
 }
 
-document
-.getElementById("searchInput")
-.addEventListener("input",function(){
+/* CATEGORY */
 
-  const keyword =
-  this.value.toLowerCase();
+function renderCategory(year){
 
-  const filtered =
-  allData.filter(row =>
-    Object.values(row).some(value =>
-      String(value)
-      .toLowerCase()
-      .includes(keyword)
-    )
-  );
+  const data = filterYear(allData.API_CATEGORY, year);
 
-  renderTable(filtered);
+  const labels = data.map(item => item.LABEL);
 
-});
+  const values = data.map(item => item.JUMLAH);
+
+  const ctx = document.getElementById('categoryChart');
+
+  new Chart(ctx,{
+    type:'doughnut',
+    data:{
+      labels:labels,
+      datasets:[{
+        data:values
+      }]
+    }
+  });
+
+}
+
+/* SUBCATEGORY */
+
+function renderSubcategory(year){
+
+  const data = filterYear(allData.API_SUBCATEGORY, year);
+
+  const labels = data.map(item => item.LABEL);
+
+  const values = data.map(item => item.JUMLAH);
+
+  const ctx = document.getElementById('subcategoryChart');
+
+  new Chart(ctx,{
+    type:'polarArea',
+    data:{
+      labels:labels,
+      datasets:[{
+        data:values
+      }]
+    }
+  });
+
+}
+
+/* ACHIEVEMENT */
+
+function renderAchievement(year){
+
+  const data = filterYear(allData.API_PENCAPAIAN, year);
+
+  const labels = data.map(item => item.LABEL);
+
+  const values = data.map(item => item.JUMLAH);
+
+  const ctx = document.getElementById('achievementChart');
+
+  new Chart(ctx,{
+    type:'pie',
+    data:{
+      labels:labels,
+      datasets:[{
+        data:values
+      }]
+    }
+  });
+
+}
+
+/* LEVEL */
+
+function renderLevel(year){
+
+  const data = filterYear(allData.API_PERINGKAT, year);
+
+  const labels = data.map(item => item.LABEL);
+
+  const values = data.map(item => item.JUMLAH);
+
+  const ctx = document.getElementById('levelChart');
+
+  new Chart(ctx,{
+    type:'radar',
+    data:{
+      labels:labels,
+      datasets:[{
+        label:'Jumlah',
+        data:values
+      }]
+    }
+  });
+
+}
+
+/* YEAR SELECTOR */
+
+const yearSelect = document.getElementById('yearSelect');
+
+if(yearSelect){
+
+  yearSelect.addEventListener('change',(e)=>{
+
+    document.querySelectorAll('canvas').forEach(canvas => {
+      const chart = Chart.getChart(canvas);
+      if(chart){
+        chart.destroy();
+      }
+    });
+
+    renderDashboard(e.target.value);
+
+  });
+
+}
 
 loadData();
