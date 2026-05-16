@@ -490,3 +490,9 @@ body{
     font-size:12px;
   }
 }
+.hero-stem-logo{
+  width:min(360px,80%);
+  max-height:320px;
+  object-fit:contain;
+  filter:drop-shadow(0 0 35px rgba(56,189,248,.35));
+}
