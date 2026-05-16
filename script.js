@@ -81,8 +81,11 @@ const centerValueLabelPlugin = {
 
     meta.data.forEach((bar, index) => {
       const value = dataset.data[index];
-      const pos = bar.tooltipPosition();
-      ctx.fillText(value, pos.x, pos.y);
+
+      const centerX = (bar.x + bar.base) / 2;
+      const centerY = bar.y;
+
+      ctx.fillText(value, centerX, centerY);
     });
 
     ctx.restore();
