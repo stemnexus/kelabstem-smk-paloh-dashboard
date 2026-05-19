@@ -27,11 +27,6 @@ function filterYear(data, year) {
   return (data || []).filter(item => String(item.TAHUN) === String(year));
 }
 
-function sumData(data, year) {
-  return filterYear(data, year)
-    .reduce((total, item) => total + Number(item.JUMLAH || 0), 0);
-}
-
 function destroyChart(id) {
   if (charts[id]) {
     charts[id].destroy();
@@ -57,11 +52,28 @@ function renderDashboard(year) {
   renderAchievement(year);
 }
 
+/* KPI FROM API_SUMMARY */
+
+function getSummaryValue(year, metric) {
+  const row = (allData.API_SUMMARY || []).find(item =>
+    String(item.TAHUN) === String(year) && String(item.METRIC) === metric
+  );
+
+  return row ? Number(row.JUMLAH || 0) : 0;
+}
+
 function renderKPI(year) {
-  document.getElementById("totalStudents").textContent = sumData(allData.API_TOP5_STUDENT, year);
-  document.getElementById("totalCategory").textContent = sumData(allData.API_CATEGORY, year);
-  document.getElementById("totalAchievement").textContent = sumData(allData.API_PENCAPAIAN, year);
-  document.getElementById("totalLevel").textContent = sumData(allData.API_PERINGKAT, year);
+  document.getElementById("totalStudents").textContent =
+    getSummaryValue(year, "JUMLAH_PELAJAR");
+
+  document.getElementById("totalCategory").textContent =
+    getSummaryValue(year, "JUMLAH_CATEGORY");
+
+  document.getElementById("totalAchievement").textContent =
+    getSummaryValue(year, "JUMLAH_PENCAPAIAN");
+
+  document.getElementById("totalLevel").textContent =
+    getSummaryValue(year, "JUMLAH_PERINGKAT");
 }
 
 /* DATA LABEL TENGAH BAR */
@@ -81,10 +93,8 @@ const centerValueLabelPlugin = {
 
     meta.data.forEach((bar, index) => {
       const value = dataset.data[index];
-
       const centerX = (bar.x + bar.base) / 2;
       const centerY = bar.y;
-
       ctx.fillText(value, centerX, centerY);
     });
 
