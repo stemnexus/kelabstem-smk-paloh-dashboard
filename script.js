@@ -273,3 +273,26 @@ if (yearSelect) {
 }
 
 loadData();
+document.querySelectorAll(".disabled-link").forEach(link => {
+  link.addEventListener("click", function(e) {
+    e.preventDefault();
+    showToast("Modul ini masih dalam pembangunan. Sila gunakan Dashboard utama buat sementara waktu.");
+  });
+});
+
+function showToast(message) {
+  let toast = document.querySelector(".toast");
+
+  if (!toast) {
+    toast = document.createElement("div");
+    toast.className = "toast";
+    document.body.appendChild(toast);
+  }
+
+  toast.textContent = message;
+  toast.classList.add("show");
+
+  setTimeout(() => {
+    toast.classList.remove("show");
+  }, 3000);
+}
